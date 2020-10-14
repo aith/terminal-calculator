@@ -29,6 +29,7 @@ bigint bigint::operator+ () const {
 }
 
 bigint bigint::operator- () const {
+   cout << "hi";
    return {uvalue, not is_negative};
 }
 
@@ -60,50 +61,36 @@ bigint bigint::operator+ (const bigint& that) const {
 }
 
 bigint bigint::operator- (const bigint& that) const {
-   ///// Start+
    bool sign;
    ubigint result;
-
+   if (uvalue < that.uvalue) cout << "hi";
+   else cout << "bye";
    // If: Diff signs
-   if (is_negative != that.is_negative) 
-      // { 
-      // If: same uvalue
-      //* if (uvalue == that.uvalue) {
-      //    if (uvalue > that.uvalue) result = uvalue - that.uvalue; 
-      //    else result = uvalue + that.uvalue; 
-      //    sign = !that.is_negative;
-      // }
-      // // If: diff uvalue
-      //* else 
-      {
-         result = uvalue + that.uvalue; 
-         //* sign = !that.is_negative;
-         sign = that.is_negative;
-      }
-   
-   // When: Same signs
-   else {
-      // If: a > b
-      if (uvalue >= that.uvalue) { 
-         result = uvalue - that.uvalue; 
-         sign = is_negative;
-      }
-      // If: b > a 
-      else {
-         result = that.uvalue - uvalue;
-         sign = that.is_negative;
-         //* sign = !sign;
-      }
-   }
-   if (result == 0) sign = false;
-   return bigint(result, sign);
-   ///// End+
-
-   // ubigint result = uvalue - that.uvalue;
-   // return result;
+   // if (is_negative != that.is_negative) 
+   //    {
+   //       cout << "first";
+   //       result = uvalue + that.uvalue; 
+   //       sign = that.is_negative;
+   //    }
+   // // When: Same signs
+   // else {
+   //    // If: a > b
+   //    if (uvalue > that.uvalue) { 
+   //       cout << "there";
+   //       result = uvalue - that.uvalue; 
+   //       sign = is_negative;
+   //    }
+   //    // If: b > a 
+   //    else {
+   //       cout << "here";
+   //       result = that.uvalue - uvalue;
+   //       sign = that.is_negative;
+   //    }
+   // }
+   // if (result == 0) sign = false;
+   // return bigint(result, sign);
 }
 
-
 bigint bigint::operator* (const bigint& that) const {
    bigint result = uvalue * that.uvalue;
    return result;

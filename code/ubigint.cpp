@@ -24,6 +24,21 @@ ubigint::ubigint (const string& that) {
    }
 }
 
+// Helper for reversing order in ubigint
+ubigint ubigint::reverse_ubigint (const ubigint& that) const {
+   // TF
+   ubigint reversed_result("");
+   //bc we cant edit const
+   vector<udigit_t> input_vector = that.ubig_value;     
+   for (long unsigned int itr = 0; 
+    !input_vector.empty(); itr++) {
+      auto digit = input_vector.back();
+      input_vector.pop_back();
+      reversed_result.ubig_value.push_back(digit);
+   }
+   return reversed_result;
+}
+
 ubigint ubigint::operator+ (const ubigint& that) const {
    // TF
    vector<udigit_t> a = ubig_value;
@@ -49,23 +64,45 @@ ubigint ubigint::operator+ (const ubigint& that) const {
    return reversed_result;
 }
 
-ubigint ubigint::reverse_ubigint (const ubigint& that) const {
-   // TF
-   ubigint reversed_result("");
-   vector<udigit_t> input_vector = that.ubig_value;  //bc we cant edit const
-
-   for (long unsigned int itr = 0; 
-    !input_vector.empty(); itr++) {
-      auto digit = input_vector.back();
-      input_vector.pop_back();
-      reversed_result.ubig_value.push_back(digit);
-   }
-   return reversed_result;
-}
-
 ubigint ubigint::operator- (const ubigint& that) const {
    if (*this < that) throw domain_error ("ubigint::operator-(a<b)");
-   return ubigint (uvalue - that.uvalue);
+   // TF
+
+   // DEBUGF ('u', ubig_value);
+   // DEBUGF ('u', that.ubig_value);
+   // cout << ubig_value;
+   // for (auto thing : ubig_value ){
+   //    cout << thing;
+   // }
+
+   // vector<udigit_t> a = ubig_value;
+   // vector<udigit_t> b = that.ubig_value;
+   // ubigint result("");
+   // int carry = 0;
+   // while (!a.empty() || !b.empty() || carry == 1) {
+   //    udigit_t a_digit = '0';
+   //    udigit_t b_digit = '0';
+   //    if (!a.empty()) { a_digit = a.back(); a.pop_back(); }
+   //    if (!b.empty()) { b_digit = b.back(); b.pop_back(); }
+   //    // DEBUGF ('u', *this << "thing- is:" << a_digit << endl);
+   //    // DEBUGF ('u', *this << "thing- is:" << b_digit << endl);
+   //    int sum = (a_digit - '0') - (b_digit - '0') - carry;
+   //    // DEBUGF ('u', *this << "sum- is:" << b_digit << endl);
+   //    carry = 0;
+   //    if (sum < 0) {
+   //    // DEBUGF ('u', *this << "in carry" << endl);
+   //       carry = 1;
+   //       sum = 10 + sum;
+   //    }
+   //    char result_digit = sum + '0';
+   //    result.ubig_value.push_back(result_digit);
+   // }
+   // // trim leading 0, if it exists
+   // if (result.ubig_value.back() == '0') result.ubig_value.pop_back();
+   // DEBUGF ('u', 
+   //*this << "non-reversed result- is:" << result << endl);
+   // ubigint reversed_result = reverse_ubigint(result);
+   // return reversed_result;
 }
 
 ubigint ubigint::operator* (const ubigint& that) const {
@@ -114,11 +151,34 @@ ubigint ubigint::operator% (const ubigint& that) const {
 }
 
 bool ubigint::operator== (const ubigint& that) const {
-   return uvalue == that.uvalue;
+   if (ubig_value.size() != that.ubig_value.size()) 
+      return false;
+   for (long unsigned int i = 0; i < ubig_value.size(); i++) {
+      if (ubig_value.at(i) != that.ubig_value.at(i))
+         return false;
+   }
+   return true;
 }
 
 bool ubigint::operator< (const ubigint& that) const {
-   return uvalue < that.uvalue;
+   // join each vec 
+   string a_string = "";
+   for (auto a_digit : ubig_value) {
+      a_string += a_digit;
+   }
+
+   string b_string = "";
+   for (auto b_digit : that.ubig_value) {
+      b_string += b_digit;
+   }
+
+   // turn into int
+   int a_int = stoi(a_string);
+   int b_int = stoi(b_string);
+
+   // cmp
+   if (a_int < b_int) return true;
+   else return false;
 }
 
 ostream& operator<< (ostream& out, const ubigint& that) { 
