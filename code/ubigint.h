@@ -7,6 +7,7 @@
 #include <iostream>
 #include <limits>
 #include <utility>
+#include <vector>
 using namespace std;
 
 #include "debug.h"
@@ -15,8 +16,14 @@ using namespace std;
 class ubigint {
    friend ostream& operator<< (ostream&, const ubigint&);
    private:
+      // to delete
       using unumber = unsigned long;
       unumber uvalue {};
+
+      // change all old code to use these instead of uvalue
+      using udigit_t = unsigned char; // I want to use int over char
+      using ubigvalue_t = vector<udigit_t>;
+      ubigvalue_t ubig_value;
    public:
       void multiply_by_2();
       void divide_by_2();
@@ -30,6 +37,9 @@ class ubigint {
       ubigint operator* (const ubigint&) const;
       ubigint operator/ (const ubigint&) const;
       ubigint operator% (const ubigint&) const;
+      
+      ubigint reverse_ubigint (const ubigint&) const;
+      
 
       bool operator== (const ubigint&) const;
       bool operator<  (const ubigint&) const;

@@ -14,22 +14,53 @@ ubigint::ubigint (unsigned long that): uvalue (that) {
    DEBUGF ('~', this << " -> " << uvalue)
 }
 
-ubigint::ubigint (const string& that): uvalue(0) {
+ubigint::ubigint (const string& that) {
    DEBUGF ('~', "that = \"" << that << "\"");
-   for (char digit: that) {
+   for (char digit : that) {
       if (not isdigit (digit)) {
          throw invalid_argument ("ubigint::ubigint(" + that + ")");
       }
-      uvalue = uvalue * 10 + digit - '0';
+      ubig_value.push_back(digit);
    }
 }
 
 ubigint ubigint::operator+ (const ubigint& that) const {
-   DEBUGF ('u', *this << "+" << that);
-   ubigint result (uvalue + that.uvalue);
-   DEBUGF ('u', result);
-   // my code
-   return result;
+   // TF
+   vector<udigit_t> a = ubig_value;
+   vector<udigit_t> b = that.ubig_value;
+   ubigint result("");
+   int carry = 0;
+   while (!a.empty() || !b.empty() || carry == 1) {
+      udigit_t a_digit = '0';
+      udigit_t b_digit = '0';
+      if (!a.empty()) { a_digit = a.back(); a.pop_back(); }
+      if (!b.empty()) { b_digit = b.back(); b.pop_back(); }
+      int sum = (a_digit - '0') + (b_digit - '0') + carry;
+      carry = 0;
+      if (sum >= 10) {
+         carry = 1;
+         sum -= 10;
+      }
+      char result_digit = sum + '0';
+      result.ubig_value.push_back(result_digit);
+   }
+   DEBUGF ('u', *this << "non-reversed result+ is:" << result << endl);
+   ubigint reversed_result = reverse_ubigint(result);
+   return reversed_result;
+}
+
+ubigint ubigint::reverse_ubigint (const ubigint& that) const {
+   // TF
+   ubigint reversed_result("");
+   vector<udigit_t> input_vector = that.ubig_value;  //bc we cant edit const
+
+   for (long unsigned int itr = 0; 
+    !input_vector.empty(); itr++) {
+      auto digit = input_vector.back();
+      input_vector.pop_back();
+      reversed_result.ubig_value.push_back(digit);
+   }
+   return reversed_result;
 }
 
 ubigint ubigint::operator- (const ubigint& that) const {
@@ -91,6 +122,10 @@ bool ubigint::operator< (const ubigint& that) const {
 }
 
 ostream& operator<< (ostream& out, const ubigint& that) { 
-   return out << "ubigint(" << that.uvalue << ")";
+   // return out << "ubigint(" << that.uvalue << ")";
+   for (auto i : that.ubig_value) {
+      out << i;
+   }
+   return out;
 }
 
