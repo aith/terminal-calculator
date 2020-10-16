@@ -43,6 +43,8 @@ class ubigint {
       // Used by bigint
       bool operator== (const ubigint&) const;
       bool operator<  (const ubigint&) const;
+
+      void drop_back();
 };
 
 #endif

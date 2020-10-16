@@ -127,6 +127,19 @@ void scan_options (int argc, char** argv) {
 // Main function.
 //
 int main (int argc, char** argv) {
+   cout << "HI";
+   ubigint test1(254);
+   // ubigint test2(501);
+
+   // test1.multiply_by_2();
+   test1.divide_by_2();
+   // test1.drop_back();
+   cout << test1;
+   test1.divide_by_2();
+   cout << test1;
+   // test1.multiply_by_2();
+   // cout << test2;
+
    exec::execname (argv[0]);
    scan_options (argc, argv);
    bigint_stack operand_stack;
