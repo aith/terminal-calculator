@@ -25,7 +25,6 @@ bigint::bigint (const string& that) {
 
 // not sure what this is for
 bigint bigint::operator+ () const {
-   // cout << "in empty +" << endl;
    return *this;
 }
 
@@ -150,7 +149,6 @@ bool bigint::operator== (const bigint& that) const {
 }
 
 bool bigint::operator< (const bigint& that) const {
-   // cout << " bigint<" << endl;
    if (is_negative != that.is_negative) return is_negative;
    return uvalue < that.uvalue;
 }

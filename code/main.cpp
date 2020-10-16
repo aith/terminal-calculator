@@ -127,18 +127,22 @@ void scan_options (int argc, char** argv) {
 // Main function.
 //
 int main (int argc, char** argv) {
-   cout << "HI";
-   ubigint test1(254);
-   // ubigint test2(501);
+   // cout << "HI";
+   // ubigint test1(0);
 
-   // test1.multiply_by_2();
-   test1.divide_by_2();
-   // test1.drop_back();
-   cout << test1;
-   test1.divide_by_2();
-   cout << test1;
-   // test1.multiply_by_2();
-   // cout << test2;
+   // // test1.multiply_by_2();
+   // test1.divide_by_2();
+   // // test1.drop_back();
+   // // cout << test1;
+   // // test1.divide_by_2();
+   // // cout << test1;
+   // // test1.multiply_by_2();
+   // // cout << test2;
+   // // cout << endl;
+
+   // ubigint test2(0);
+   // // test2.multiply_by_2();
+   // // cout << test2;
 
    exec::execname (argv[0]);
    scan_options (argc, argv);

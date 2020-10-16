@@ -21,7 +21,7 @@ ubigint::ubigint (unsigned long that): uvalue (that) {
       that /= 10;
    }
    if (ubig_value.size() == 0) ubig_value.push_back(0);
-   reverse(ubig_value.begin(), ubig_value.end());
+   // reverse(ubig_value.begin(), ubig_value.end());
 }
 
 ubigint::ubigint (const string& that) {//: uvalue(0) {
@@ -65,15 +65,17 @@ ubigint ubigint::reverse_ubigint (const ubigint& that) const {
 }
 
 ubigint ubigint::operator+ (const ubigint& that) const {
-   // cout << "input+ is " << that << endl;
+   cout << "input+ is " << that << endl;
    // TF
    vector<udigit_t> a = ubig_value;
    vector<udigit_t> b = that.ubig_value;
-   ubigint result("");
+   reverse(a.begin(), a.end());
+   reverse(b.begin(), b.end());
+   ubigint result;
    int carry = 0;
    while (!a.empty() || !b.empty() || carry == 1) {
-      udigit_t a_digit = 0 - '0';
-      udigit_t b_digit = 0 - '0';
+      udigit_t a_digit = 0;
+      udigit_t b_digit = 0;
       if (!a.empty()) { a_digit = a.back(); a.pop_back(); }
       if (!b.empty()) { b_digit = b.back(); b.pop_back(); }
       int sum = (a_digit) + (b_digit) + carry;
@@ -85,23 +87,27 @@ ubigint ubigint::operator+ (const ubigint& that) const {
       char result_digit = sum;
       result.ubig_value.push_back(result_digit);
    }
-   reverse(result.ubig_value.begin(), result.ubig_value.end());
-   while (result.ubig_value.back() == 0 && result.ubig_value.size() != 1) 
+   // reverse(result.ubig_value.begin(), result.ubig_value.end());
+   cout << "back is " << result.ubig_value.back() << endl;
+   while (result.ubig_value.back()==0 && result.ubig_value.size()!=1) 
       result.ubig_value.pop_back();
    return result;
 }
 
 ubigint ubigint::operator- (const ubigint& that) const {
-   // cout << "input- is " << that << endl;
+   cout << *this << "input- is " << that << endl;
    if (*this < that) throw domain_error ("ubigint::operator-(a<b)");
    // TF
    vector<udigit_t> a = ubig_value;
    vector<udigit_t> b = that.ubig_value;
-   ubigint result("");
+   reverse(a.begin(), a.end());
+   reverse(b.begin(), b.end());
+   ubigint result;
    int carry = 0;
+   // TODO: something breaks when i do 1 12 -
    while (!a.empty() || !b.empty() || carry == 1) {
-      udigit_t a_digit = 0 - '0';
-      udigit_t b_digit = 0 - '0';
+      int a_digit = 0;
+      int b_digit = 0;
       if (!a.empty()) { a_digit = a.back(); a.pop_back(); }
       if (!b.empty()) { b_digit = b.back(); b.pop_back(); }
       int sum = a_digit - b_digit - carry;
@@ -110,12 +116,14 @@ ubigint ubigint::operator- (const ubigint& that) const {
          carry = 1;
          sum = 10 + sum;
       }
+      // cout << "hi";
       char result_digit = sum;
       result.ubig_value.push_back(result_digit);
    }
    // trim leading 0, if it exists
-   reverse(result.ubig_value.begin(), result.ubig_value.end());
-   while (result.ubig_value.back() == 0 && result.ubig_value.size() != 1) 
+   // reverse(result.ubig_value.begin(), result.ubig_value.end());
+   cout << "back is " << result.ubig_value.back() << endl;
+   while (result.ubig_value.back()==0 && result.ubig_value.size()!=1) 
       result.ubig_value.pop_back();
    // for (auto thing : result.ubig_value) {
    //    cout << thing;
@@ -124,7 +132,7 @@ ubigint ubigint::operator- (const ubigint& that) const {
 }
 
 ubigint ubigint::operator* (const ubigint& that) const {
-   // cout << "input* is " << that << endl;
+   cout << "input* is " << that << endl;
    // initialize ubigith with '000...' here
    string initializeString = "";
    for (long unsigned int s = 0; 
@@ -137,7 +145,8 @@ ubigint ubigint::operator* (const ubigint& that) const {
    for (long unsigned i = 0; i < m; i++) {
       int c = 0;
       for (long unsigned j = 0; j < n; j++) {
-         auto d = p.ubig_value.at(i+j) + (ubig_value.at(i) * that.ubig_value.at(j))
+         auto d = p.ubig_value.at(i+j) 
+         + (ubig_value.at(i) * that.ubig_value.at(j))
          + c;
          p.ubig_value.at(i+j) = d%10;
          c = floor(d / 10);
@@ -147,22 +156,10 @@ ubigint ubigint::operator* (const ubigint& that) const {
    while (p.ubig_value.back() == 0 && p.ubig_value.size() != 1) 
       p.ubig_value.pop_back();
    return p;
-
-   // algorithm
-   // for (long unsigned int a = 0; a < ubig_value.size(); a++) {
-   //    int c = 0;
-   //    for (long unsigned int b = 0; b < that.ubig_value.size(); b++) {
-   //       int d = (product.ubig_value.at(a + b) - '0')
-   //           + ((ubig_value.at(a) - '0') * (that.ubig_value.at(b) - '0'))
-   //           + c;
-   //       product.ubig_value.at(a + b) = (d % 10) + '0';
-   //       c = floor(d / 10);
-   //    }
-   //    product.ubig_value.at(a+that.ubig_value.size()) = c + '0';
-   // }
 }
 
 void ubigint::multiply_by_2() {
+   cout << "mult2 " << endl;
    // convert to chars
    int size = this->ubig_value.size();
    int carry = 0;
@@ -179,6 +176,7 @@ void ubigint::multiply_by_2() {
 }
 
 void ubigint::divide_by_2() {
+   cout << "div2 " << endl;
    // convert to chars
    int size = this->ubig_value.size();
    for (auto thing : this->ubig_value) {
@@ -218,17 +216,17 @@ quo_rem udivide (const ubigint& dividend, const ubigint& divisor_) {
 }
 
 ubigint ubigint::operator/ (const ubigint& that) const {
-   // cout << "input/ is " << that << endl;
+   cout << "input/ is " << that << endl;
    return udivide (*this, that).quotient;
 }
 
 ubigint ubigint::operator% (const ubigint& that) const {
-   // cout << "input% is " << that << endl;
+   cout << "input% is " << that << endl;
    return udivide (*this, that).remainder;
 }
 
 bool ubigint::operator== (const ubigint& that) const {
-   // cout << "input== is " << that << endl;
+   cout << "input== is " << that << endl;
    // tr
    // cout << ubig_value.size() << " comp " << that.ubig_value.size();
 
@@ -242,6 +240,9 @@ bool ubigint::operator== (const ubigint& that) const {
 }
 
 bool ubigint::operator< (const ubigint& that) const {
+   // for (int i = 0; i < ubig_value.size()-1; i++) {
+   //    cout << ubig_value[i];
+   // }
    // cout << " comp< is " << that << endl;
    if (ubig_value.size() < that.ubig_value.size()) return true;
    if (ubig_value.size() > that.ubig_value.size()) return false;
@@ -269,10 +270,10 @@ bool ubigint::operator< (const ubigint& that) const {
 //    return out << ")";
 // }
 ostream& operator<< (ostream& out, const ubigint& that) { 
-   // cout << "input<< is " << that << endl;
    if (that.ubig_value.size() < 1) {
       return out << 0;
    }
+   // cout << "back is " << that.ubig_value.back();
    for (int i = that.ubig_value.size()-1; i >= 0; i-- ) {
       out << static_cast<int>(that.ubig_value[i]);
    }
@@ -288,8 +289,3 @@ ostream& operator<< (ostream& out, const ubigint& that) {
 //    }
 //    return out;
 // }
-
-
-void ubigint::drop_back() {
-   this->ubig_value.pop_back();
-}
