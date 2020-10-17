@@ -7,7 +7,7 @@ cd ydc
 make
 ```
 ### Usage
-Run 'ydc'in termina1, and provide any of following inputs:
+Run 'ydc' in terminal , and provide any of following inputs:
 ```
 {number}        # Insert a number onto the stack
 _{number}       # Insert a negative number onto the stack
