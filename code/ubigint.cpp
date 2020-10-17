@@ -14,40 +14,24 @@ using namespace std;
 #include "ubigint.h"
 #include "debug.h"
 
-ubigint::ubigint (unsigned long that): uvalue (that) {
-   DEBUGF ('~', this << " -> " << uvalue)
+ubigint::ubigint (unsigned long that){
    while (that > 0) {
       ubig_value.push_back(that % 10);
       that /= 10;
    }
    if (ubig_value.size() == 0) ubig_value.push_back(0);
-   // reverse(ubig_value.begin(), ubig_value.end());
 }
 
-ubigint::ubigint (const string& that) {//: uvalue(0) {
-   DEBUGF ('~', "string constructor = \"" << that << "\"");
+ubigint::ubigint (const string& that) {
    for (char digit: that) {
       if (not isdigit (digit)) {
          throw invalid_argument ("ubigint::ubigint(" + that + ")");
       }
-      // uvalue = uvalue * 10 + digit - '0';
       ubig_value.push_back(digit-'0');
-      // cout << (digit - '0');
    }
    if (ubig_value.size() == 0) ubig_value.push_back(0);
    reverse(ubig_value.begin(), ubig_value.end());
 }
-
-// ubigint::ubigint (const string& that) {
-//    DEBUGF ('~', "that = \"" << that << "\"");
-//    for (char digit : that) {
-//       if (not isdigit (digit)) {
-//          throw invalid_argument ("ubigint::ubigint(" + that + ")");
-//       }
-//       ubig_value.push_back(digit - '0');
-//       cout << digit - '0';
-//    }
-// }
 
 // Helper for reversing order in ubigint
 ubigint ubigint::reverse_ubigint (const ubigint& that) const {
@@ -65,7 +49,6 @@ ubigint ubigint::reverse_ubigint (const ubigint& that) const {
 }
 
 ubigint ubigint::operator+ (const ubigint& that) const {
-   // TF
    vector<udigit_t> a = ubig_value;
    vector<udigit_t> b = that.ubig_value;
    reverse(a.begin(), a.end());
@@ -86,7 +69,6 @@ ubigint ubigint::operator+ (const ubigint& that) const {
       char result_digit = sum;
       result.ubig_value.push_back(result_digit);
    }
-   // reverse(result.ubig_value.begin(), result.ubig_value.end());
    while (result.ubig_value.back()==0 && result.ubig_value.size()!=1) 
       result.ubig_value.pop_back();
    return result;
@@ -94,14 +76,12 @@ ubigint ubigint::operator+ (const ubigint& that) const {
 
 ubigint ubigint::operator- (const ubigint& that) const {
    if (*this < that) throw domain_error ("ubigint::operator-(a<b)");
-   // TF
    vector<udigit_t> a = ubig_value;
    vector<udigit_t> b = that.ubig_value;
    reverse(a.begin(), a.end());
    reverse(b.begin(), b.end());
    ubigint result;
    int carry = 0;
-   // something breaks when i do 1 12 -
    while (!a.empty() || !b.empty() || carry == 1) {
       int a_digit = 0;
       int b_digit = 0;
@@ -113,22 +93,15 @@ ubigint ubigint::operator- (const ubigint& that) const {
          carry = 1;
          sum = 10 + sum;
       }
-      // cout << "hi";
       char result_digit = sum;
       result.ubig_value.push_back(result_digit);
    }
-   // trim leading 0, if it exists
-   // reverse(result.ubig_value.begin(), result.ubig_value.end());
    while (result.ubig_value.back()==0 && result.ubig_value.size()!=1) 
       result.ubig_value.pop_back();
-   // for (auto thing : result.ubig_value) {
-   //    cout << thing;
-   // }
    return result;
 }
 
 ubigint ubigint::operator* (const ubigint& that) const {
-   // initialize ubigith with '000...' here
    string initializeString = "";
    for (long unsigned int s = 0; 
     s < (ubig_value.size() + that.ubig_value.size()); s++) {
@@ -154,7 +127,6 @@ ubigint ubigint::operator* (const ubigint& that) const {
 }
 
 void ubigint::multiply_by_2() {
-   // convert to chars
    int size = this->ubig_value.size();
    int carry = 0;
    for (int i = 0; i < size; i++) {
@@ -170,7 +142,6 @@ void ubigint::multiply_by_2() {
 }
 
 void ubigint::divide_by_2() {
-   // convert to chars
    int size = this->ubig_value.size();
    for (int i = 0; i < size-1; i++) {
       this->ubig_value[i] = (this->ubig_value[i] / 2)
@@ -183,13 +154,12 @@ void ubigint::divide_by_2() {
 
 struct quo_rem { ubigint quotient; ubigint remainder; };
 quo_rem udivide (const ubigint& dividend, const ubigint& divisor_) {
-   // NOTE: udivide is a non-member function.
    ubigint divisor {divisor_};
    ubigint zero {0};
    if (divisor == zero) throw domain_error ("udivide by zero");
    ubigint power_of_2 {1};
    ubigint quotient {0};
-   ubigint remainder {dividend}; // left operand, dividend
+   ubigint remainder {dividend}; 
    while (divisor < remainder) {
       divisor.multiply_by_2();
       power_of_2.multiply_by_2();
@@ -214,9 +184,6 @@ ubigint ubigint::operator% (const ubigint& that) const {
 }
 
 bool ubigint::operator== (const ubigint& that) const {
-   // tr
-   // cout << ubig_value.size() << " comp " << that.ubig_value.size();
-
    if (ubig_value.size() != that.ubig_value.size()) return false;
    long unsigned int itr = 0;
    while (itr < ubig_value.size()) {
@@ -227,10 +194,6 @@ bool ubigint::operator== (const ubigint& that) const {
 }
 
 bool ubigint::operator< (const ubigint& that) const {
-   // for (int i = 0; i < ubig_value.size()-1; i++) {
-   //    cout << ubig_value[i];
-   // }
-   // cout << " comp< is " << that << endl;
    if (ubig_value.size() < that.ubig_value.size()) return true;
    if (ubig_value.size() > that.ubig_value.size()) return false;
    for (int i = ubig_value.size() - 1 ; i >= 0; i--) {
@@ -240,28 +203,11 @@ bool ubigint::operator< (const ubigint& that) const {
    return false; // if ==
 }
 
-// ostream& operator<< (ostream& out, const ubigint& that) { 
-//    // return out << "ubigint(" << that.uvalue << ")";
-//    int Vsize = that.ubig_value.size(); //size of vector/token
-//    out << "ubigint(";
-//    if(Vsize==0){ //base case
-//       out << '0';
-//       return out;
-//    }
-//    for(unsigned i = Vsize-1; i>=0; --i){
-//       out << static_cast<int>(that.ubig_value.at(i));
-//       if(i==0){
-//          break;
-//       }
-//    }
-//    return out << ")";
-// }
 ostream& operator<< (ostream& out, const ubigint& that) { 
    if (that.ubig_value.size() < 1) {
       return out << 0;
    }
    int char_counter = 0;
-   // cout << "back is " << that.ubig_value.back();
    for (int i = that.ubig_value.size()-1; i >= 0; i-- ) {
       if (char_counter >= 69) {
          out << '\\' << endl;
@@ -272,13 +218,3 @@ ostream& operator<< (ostream& out, const ubigint& that) {
    }
    return out;
 }
-// ostream& operator<< (ostream& out, const ubigint& that) { 
-//    // cout << "input<< is " << that << endl;
-//    if (that.ubig_value.size() < 1) {
-//       return out << 0;
-//    }
-//    for (int i = 0; i < that.ubig_value.size(); i++ ) {
-//       out << static_cast<int>(that.ubig_value[i]);
-//    }
-//    return out;
-// }
