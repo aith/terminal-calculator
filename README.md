@@ -7,7 +7,8 @@ cd ydc
 make
 ```
 ### Usage
-Run 'ydc' in termina1, and provide any of following inputs:
+Run 'ydc'in termina1, and provide any of following inputs:
+```
 {number}        # Insert a number onto the stack
 _{number}       # Insert a negative number onto the stack
 +               # Addition with 2 numbers
@@ -19,3 +20,4 @@ f               # Print all numbers in the stack
 c               # Clear the stack
 d               # Duplicate the number on top of the stack
 q               # Quit 'ydc'
+```
